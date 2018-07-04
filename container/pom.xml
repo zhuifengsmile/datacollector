@@ -36,7 +36,7 @@
   <properties>
     <aws.version>1.10.59</aws.version>
     <commons-compress.version>1.10</commons-compress.version>
-    <sdc.log4j.level>DEBUG</sdc.log4j.level>
+    <sdc.log4j.level>INFO</sdc.log4j.level>
   </properties>
 
   <dependencies>

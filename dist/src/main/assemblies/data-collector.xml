@@ -151,6 +151,9 @@
     <fileSet>
       <directory>${docs.dist-dir}</directory>
       <outputDirectory>/sdc-static-web/docs</outputDirectory>
+      <excludes>
+        <exclude>datacollector/**</exclude>
+      </excludes>
     </fileSet>
 
     <!-- javadocs -->

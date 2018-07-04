@@ -43,12 +43,7 @@ import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.streamsets.pipeline.config.AvroSchemaLookupMode.ID;
 import static com.streamsets.pipeline.config.AvroSchemaLookupMode.SUBJECT;
@@ -66,6 +61,11 @@ public class KafkaTargetConfig {
   private static final long RETRY_BACKOFF_MS_DEFAULT = 1000;
   private static final int TOPIC_WARN_SIZE = 500;
   private static final String KAFKA_CONFIG_BEAN_PREFIX = "conf.";
+  private static Properties properties = new Properties();
+  static {
+    properties.put("cleanup.policy", "delete");
+    properties.put("retention.ms", "172800000");//2 day
+  }
 
   @ConfigDef(
       required = true,
@@ -94,12 +94,24 @@ public class KafkaTargetConfig {
   public String metadataBrokerList;
 
   @ConfigDef(
+          required = true,
+          type = ConfigDef.Type.STRING,
+          defaultValue = "localhost:2181",
+          label = "Zookeeper URI",
+          description = "Comma-separated list of URIs for brokers that write to the topic.  Use the format " +
+                  "<HOST>:<PORT>. To ensure a connection, enter as many as possible.",
+          displayPosition = 15,
+          group = "#0"
+  )
+  public String metadataZookeeperUri;
+
+  @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
     label = "Runtime Topic Resolution",
     description = "Select topic at runtime based on the field values in the record",
-    displayPosition = 15,
+    displayPosition = 20,
     group = "#0"
   )
   public boolean runtimeTopicResolution;
@@ -110,7 +122,7 @@ public class KafkaTargetConfig {
     defaultValue = "${record:value('/topic')}",
     label = "Topic Expression",
     description = "An expression that resolves to the name of the topic to use",
-    displayPosition = 20,
+    displayPosition = 25,
     elDefs = {RecordEL.class},
     group = "#0",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -128,7 +140,7 @@ public class KafkaTargetConfig {
     description = "A comma-separated list of valid topic names. " +
       "Records with invalid topic names are treated as error records. " +
       "'*' indicates that all topic names are allowed.",
-    displayPosition = 23,
+    displayPosition = 28,
     group = "#0",
     dependsOn = "runtimeTopicResolution",
     triggeredByValue = "true"
@@ -141,7 +153,7 @@ public class KafkaTargetConfig {
     defaultValue = "topicName",
     label = "Topic",
     description = "",
-    displayPosition = 25,
+    displayPosition = 30,
     group = "#0",
     dependsOn = "runtimeTopicResolution",
     triggeredByValue = "false"
@@ -154,7 +166,7 @@ public class KafkaTargetConfig {
     defaultValue = "ROUND_ROBIN",
     label = "Partition Strategy",
     description = "Strategy to select a partition to write to",
-    displayPosition = 30,
+    displayPosition = 35,
     group = "#0"
   )
   @ValueChooserModel(PartitionStrategyChooserValues.class)
@@ -168,7 +180,7 @@ public class KafkaTargetConfig {
     description = "When using the default partition strategy, enter an expression to evaluate the partition key " +
         "from record, which will be used with hash function to determine the topic's partition. " +
         "When using Expression, enter an expression that determines the partition number. ",
-    displayPosition = 40,
+    displayPosition = 45,
     group = "#0",
     dependsOn = "partitionStrategy",
     triggeredByValue = {"EXPRESSION", "DEFAULT"},
@@ -183,7 +195,7 @@ public class KafkaTargetConfig {
     defaultValue = "false",
     label = "One Message per Batch",
     description = "Generates a single Kafka message with all records in the batch",
-    displayPosition = 50,
+    displayPosition = 55,
     group = "#0"
   )
   public boolean singleMessagePerBatch;
@@ -194,7 +206,7 @@ public class KafkaTargetConfig {
       label = "Key Serializer",
       description = "Method used to serialize the Kafka message key. Set to Confluent to embed the Avro schema ID in each message the destination writes.",
       defaultValue = "STRING",
-      displayPosition = 440,
+      displayPosition = 445,
       dependsOn = "dataFormat",
       triggeredByValue = "AVRO",
       group = "KAFKA"
@@ -208,7 +220,7 @@ public class KafkaTargetConfig {
       label = "Value Serializer",
       description = "Method used to serialize the Kafka message value. Set to Confluent to embed the Avro schema ID in each message the destination writes.",
       defaultValue = "DEFAULT",
-      displayPosition = 450,
+      displayPosition = 455,
       dependsOn = "dataFormat",
       triggeredByValue = "AVRO",
       group = "KAFKA"
@@ -222,7 +234,7 @@ public class KafkaTargetConfig {
     defaultValue = "",
     label = "Kafka Configuration",
     description = "Additional Kafka properties to pass to the underlying Kafka producer",
-    displayPosition = 60,
+    displayPosition = 65,
     group = "#0"
   )
   public Map<String, String> kafkaProducerConfigs = new HashMap<>();
@@ -474,7 +486,9 @@ public class KafkaTargetConfig {
         topic,
         new HashMap<String, Object>(kafkaProducerConfigs),
         issues,
-        true
+        true,
+        metadataZookeeperUri, 
+        properties
     );
     if(valid) {
       try {

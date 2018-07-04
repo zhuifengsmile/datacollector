@@ -19,8 +19,8 @@
 <html lang="en" ng-app="dataCollectorApp">
 <head>
   <meta charset="utf-8">
-  <meta name="description" content="StreamSets Data Collector">
-  <title ng-bind="common.title">StreamSets | Data Collector</title>
+  <meta name="description" content="flinksparkStream">
+  <title ng-bind="common.title">flinksparkStream</title>
 
   <script type="text/javascript">
     function escapeHtml(str) {
@@ -84,7 +84,7 @@
 
       <ul class="nav navbar-nav navbar-right" ng-cloak>
 
-        <li ng-if="common.isDPMEnabled">
+        <!--li ng-if="common.isDPMEnabled">
           <a ng-href="{{common.dpmBaseURL}}"
              target="_blank"
              tooltip-placement="bottom"
@@ -108,7 +108,7 @@
             <i class="fa fa-cloud fa-lg"></i>
             <span>SCH</span>
           </a>
-        </li>
+        </li-->
 
         <li>
           <a ng-href="{{common.baseHref}}"
@@ -121,7 +121,7 @@
           </a>
         </li>
 
-        <li ng-if="!common.isSlaveNode && isAuthorized([userRoles.admin])">
+        <!--li ng-if="!common.isSlaveNode && isAuthorized([userRoles.admin])">
           <a href="/collector/packageManager"
              tooltip-placement="bottom"
              tooltip="{{'global.menu.packageManager' | translate}}"
@@ -140,7 +140,7 @@
             <i class="fa fa-cloud fa-lg dpm-color"></i>
             <span>SCH</span>
           </a>
-        </li>
+        </li-->
 
 
         <li class="dropdown pointer notifications-dropdown"

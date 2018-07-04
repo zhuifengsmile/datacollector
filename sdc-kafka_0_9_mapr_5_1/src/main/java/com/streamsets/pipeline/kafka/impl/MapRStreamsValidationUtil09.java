@@ -82,7 +82,9 @@ public class MapRStreamsValidationUtil09 extends BaseKafkaValidationUtil impleme
     String topic,
     Map<String, Object> kafkaClientConfigs,
     List<Stage.ConfigIssue> issues,
-    boolean producer
+    boolean producer,
+    null,
+    null
   ) {
     boolean valid = true;
     if(topic == null || topic.isEmpty()) {

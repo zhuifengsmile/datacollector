@@ -26,13 +26,25 @@ import com.streamsets.pipeline.api.ext.json.Mode;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class JsonRecordWriterImpl implements JsonRecordWriter {
   private final static String EOL = System.getProperty("line.separator");
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private static final JsonFactory JSON_FACTORY = OBJECT_MAPPER.getFactory();
+
+  private static ThreadLocal<SimpleDateFormat> dateFormat = new ThreadLocal<SimpleDateFormat>(){
+    @Override
+    protected SimpleDateFormat initialValue() {
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+08:00"));
+      return dateFormat;
+
+    }
+  };
 
   static {
     OBJECT_MAPPER.disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
@@ -90,8 +102,10 @@ public class JsonRecordWriterImpl implements JsonRecordWriter {
         generator.writeStartObject();
         Map<String, Field> map = field.getValueAsMap();
         for (Map.Entry<String, Field> fieldEntry : map.entrySet()) {
-          generator.writeFieldName(fieldEntry.getKey());
-          writeFieldToJsonObject(fieldEntry.getValue());
+          if(fieldEntry.getValue() != null && fieldEntry.getValue().getValue() != null){
+            generator.writeFieldName(fieldEntry.getKey());
+            writeFieldToJsonObject(fieldEntry.getValue());
+          }
         }
         generator.writeEndObject();
         break;
@@ -128,13 +142,16 @@ public class JsonRecordWriterImpl implements JsonRecordWriter {
         generator.writeNumber(field.getValueAsDouble());
         break;
       case DATE:
-        generator.writeNumber(field.getValueAsDate().getTime());
+        //generator.writeNumber(field.getValueAsDate().getTime());
+        generator.writeString(dateFormat.get().format(field.getValueAsDate().getTime()));
         break;
       case DATETIME:
-        generator.writeNumber(field.getValueAsDatetime().getTime());
+        //generator.writeNumber(field.getValueAsDatetime().getTime());
+        generator.writeString(dateFormat.get().format(field.getValueAsDatetime().getTime()));
         break;
       case TIME:
-        generator.writeNumber(field.getValueAsTime().getTime());
+        //generator.writeNumber(field.getValueAsTime().getTime());
+        generator.writeString(dateFormat.get().format(field.getValueAsTime().getTime()));
         break;
       case DECIMAL:
         generator.writeNumber(field.getValueAsDecimal());

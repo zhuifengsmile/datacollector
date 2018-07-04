@@ -51,7 +51,7 @@ public abstract class RandomTestUtils {
   }
 
   /**
-   * Copied from {@link org.apache.commons.lang3.RandomUtils} but using our seeded Random instance
+   * Copied from {org.apache.commons.lang3.RandomUtils} but using our seeded Random instance
    * @param startInclusive
    * @param endExclusive
    * @return

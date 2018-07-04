@@ -19,7 +19,7 @@
     </thead>
     <tbody ng-hide="showLoading">
     <tr ng-repeat="history in runHistory track by $index">
-      <td>{{history.timeStamp | date:'medium'}}</td>
+      <td>{{history.timeStamp | date:'yyyy-MM-dd HH:mm:ss':'GMT+08:00'}}</td>
       <td>{{history.user}}</td>
       <td ng-bind="history.status"></td>
       <td ng-bind="history.message"></td>

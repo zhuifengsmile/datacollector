@@ -21,11 +21,14 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.BaseKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
+import kafka.admin.AdminUtils;
+import kafka.utils.ZkUtils;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.PartitionInfo;
+import org.apache.kafka.common.security.JaasUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +84,9 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
     String topic,
     Map<String, Object> kafkaClientConfigs,
     List<Stage.ConfigIssue> issues,
-    boolean producer
+    boolean producer,
+    String zookeeperUri, 
+    Properties properties
   ) {
     boolean valid = true;
     if(topic == null || topic.isEmpty()) {
@@ -93,6 +98,14 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
       KafkaConsumer<String, String> kafkaConsumer = null;
       try {
         if (producer) {
+          ZkUtils zkUtils = ZkUtils.apply(zookeeperUri, 3000, 3000, JaasUtils.isZkSecurityEnabled());
+          try {
+            if(!AdminUtils.topicExists(zkUtils, topic)){
+              AdminUtils.createTopic(zkUtils, topic, 1, 2, properties);
+            }
+          }finally {
+            zkUtils.close();
+          }
           kafkaProducer = createProducerTopicMetadataClient(
               metadataBrokerList,
               kafkaClientConfigs

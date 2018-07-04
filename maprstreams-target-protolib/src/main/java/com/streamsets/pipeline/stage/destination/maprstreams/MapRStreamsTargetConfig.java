@@ -315,7 +315,9 @@ public class MapRStreamsTargetConfig {
           Collections.<String, Object>emptyMap() :
           new HashMap<String, Object>(kafkaProducerConfigs),
       issues,
-      true
+      true,
+      null,
+      null
     );
     if(valid) {
       try {

@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.StageException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public interface SdcKafkaValidationUtil {
 
@@ -49,7 +50,9 @@ public interface SdcKafkaValidationUtil {
     String topic,
     Map<String, Object> kafkaProducerConfigs,
     List<Stage.ConfigIssue> issues,
-    boolean producer
+    boolean producer,
+    String zookeeperUri, 
+    Properties properties
   );
 
   public int getPartitionCount(

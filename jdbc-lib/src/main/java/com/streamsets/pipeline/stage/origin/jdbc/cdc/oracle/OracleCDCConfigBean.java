@@ -242,4 +242,15 @@ public class OracleCDCConfigBean {
   @ValueChooserModel(TimeZoneChooserValues.class)
   public String dbTimeZone;
 
+  @ConfigDef(
+          required = true,
+          type = ConfigDef.Type.BOOLEAN,
+          label = "how to chose endtime",
+          description = "true plus,false now",
+          displayPosition = 190,
+          group = "CDC",
+          defaultValue = "false"
+  )
+  public boolean choseEndTime;
+
 }

@@ -32,10 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class KafkaValidationUtil08 extends BaseKafkaValidationUtil implements SdcKafkaValidationUtil {
 
@@ -96,7 +93,9 @@ public class KafkaValidationUtil08 extends BaseKafkaValidationUtil implements Sd
     String topic,
     Map<String, Object> kafkaClientConfigs,
     List<Stage.ConfigIssue> issues,
-    boolean producer
+    boolean producer,
+    String zookeeperUri, 
+    Properties properties
   ) {
     boolean valid = true;
     if(topic == null || topic.isEmpty()) {

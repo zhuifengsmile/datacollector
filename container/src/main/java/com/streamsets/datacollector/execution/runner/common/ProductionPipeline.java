@@ -114,6 +114,8 @@ public class ProductionPipeline {
               LOG.debug("Finishing");
               stateChanged(PipelineStatus.FINISHING, null, null);
               finishing = true;
+            }else {
+              LOG.info("stoping in ProductionPipeline");
             }
           } catch (Throwable e) {
             if (!wasStopped()) {

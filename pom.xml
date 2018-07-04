@@ -67,13 +67,13 @@
     <basic-lib>basic-lib</basic-lib>
     <bigtable-lib>bigtable-lib</bigtable-lib>
     <cyberark-credentialstore-lib>cyberark-credentialstore-lib</cyberark-credentialstore-lib>
-    <dev-lib>dev-lib</dev-lib>
+    <!--dev-lib>dev-lib</dev-lib-->
     <dataformats-lib>dataformats-lib</dataformats-lib>
     <google-cloud-lib>google-cloud-lib</google-cloud-lib>
     <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
     <jks-credentialstore-lib>jks-credentialstore-lib</jks-credentialstore-lib>
     <jdbc-lib>jdbc-lib</jdbc-lib>
-    <jms-lib>jms-lib</jms-lib>
+    <!--jms-lib>jms-lib</jms-lib-->
     <mysql-binlog-lib>mysql-binlog-lib</mysql-binlog-lib>
     <omniture-lib>omniture-lib</omniture-lib>
     <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
@@ -119,7 +119,7 @@
     <module>sso</module>
     <module>common</module>
     <module>container-common</module>
-    <module>google-common</module>
+    <!--module>google-common</module-->
     <module>json-dto</module>
     <module>messaging-client</module>
     <module>container</module>
@@ -127,7 +127,7 @@
     <module>sdk</module>
     <module>stage-lib-archetype</module>
     <module>hadoop-common</module>
-    <module>mapr-common</module>
+    <!--module>mapr-common</module-->
 
     <module>root-lib</module>
 
@@ -140,6 +140,7 @@
     <module>lookup-protolib</module>
 
     <module>hdfs-protolib</module>
+    <!--
     <module>mapreduce-protolib</module>
     <module>maprfs-protolib</module>
     <module>maprdb-protolib</module>
@@ -147,15 +148,17 @@
     <module>mapr_json-5_2-protolib</module>
     <module>mapr_json-6_0-protolib</module>
     <module>hive-protolib</module>
-
+    -->
     <module>dir-spooler-protolib</module>
 
     <module>sdc-kafka-api</module>
     <module>sdc-kafka_0_8</module>
     <module>sdc-kafka_0_9-common</module>
     <module>sdc-kafka_0_9</module>
+    <!--
     <module>sdc-kafka_0_9_mapr_5_1</module>
     <module>sdc-kafka_0_10</module>
+    -->
     <module>sdc-kafka_0_11</module>
     <module>sdc-kafka_1_0</module>
     <module>kafka-common</module>
@@ -164,11 +167,14 @@
     <module>kafka_multisource-0_9-protolib</module>
     <module>kafka_multisource-0_10-protolib</module>
     <module>kafka_target-protolib</module>
+    <!--
     <module>maprstreams-common</module>
     <module>maprstreams-target-protolib</module>
     <module>maprstreams-source-protolib</module>
     <module>maprstreams-multisource-protolib</module>
+    -->
     <module>jython-protolib</module>
+    <!--
     <module>groovy-protolib</module>
     <module>kinetica-protolib</module>
 
@@ -185,20 +191,25 @@
     <module>cluster-hdfs-protolib</module>
     <module>hbase-protolib</module>
     <module>kudu-protolib</module>
+    -->
     <module>cluster-common</module>
     <module>cluster-kafka-protolib</module>
     <module>cluster-bootstrap-api</module>
+    <!--
     <module>cluster-bootstrap</module>
     <module>mapr-cluster-bootstrap</module>
     <module>mesos-bootstrap</module>
+    -->
     <module>client-api</module>
     <module>cli</module>
     <module>common-ui</module>
+    <!--
     <module>sdc-solr-api</module>
     <module>sdc-solr_cdh_4</module>
     <module>sdc-solr_6</module>
     <module>spark-executor-protolib</module>
     <module>spark-processor-protolib</module>
+    -->
 
     <!--
          Stage libraries that always built with the data collector (they dont have protolibs)
@@ -208,27 +219,37 @@
          IMPORTANT: define a property matching the module directory name
          for every stage library here with the directory name as value
     -->
+    <!--
     <module>aerospike-lib</module>
     <module>aws-lib</module>
     <module>azure-lib</module>
+    -->
     <module>basic-lib</module>
+    <!--
     <module>bigtable-lib</module>
     <module>cyberark-credentialstore-lib</module>
     <module>dev-lib</module>
+    -->
     <module>dataformats-lib</module>
+    <!--
     <module>google-cloud-lib</module>
     <module>influxdb_0_9-lib</module>
     <module>jks-credentialstore-lib</module>
+    -->
     <module>jdbc-lib</module>
-    <module>jms-lib</module>
+    <!--module>jms-lib</module-->
     <module>mysql-binlog-lib</module>
+    <!--
     <module>omniture-lib</module>
     <module>rabbitmq-lib</module>
     <module>redis-lib</module>
     <module>salesforce-lib</module>
+    -->
     <module>stats-lib</module>
+    <!--
     <module>vault-credentialstore-lib</module>
     <module>windows-lib</module>
+    -->
   </modules>
 
   <build>
@@ -589,6 +610,7 @@
              IMPORTANT: define a property matching the module directory name
              for all the sample dev stage libraries here with the directory name as value
         -->
+        <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
         <apache-kafka_1_0-lib>apache-kafka_1_0-lib</apache-kafka_1_0-lib>
         <apache-kudu_1_7-lib>apache-kudu_1_7-lib</apache-kudu_1_7-lib>
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
@@ -619,7 +641,8 @@
 
              IMPORTANT: the modules for the sample dev stage libraries
         -->
-        <module>apache-kafka_1_0-lib</module>
+        <module>apache-kafka_0_9-lib</module>
+        <!--
         <module>apache-kudu_1_7-lib</module>
         <module>apache-solr_6_1_0-lib</module>
         <module>cassandra_3-lib</module>
@@ -634,11 +657,14 @@
         <module>hdp_2_6_2-hive1-lib</module>
         <module>hdp_2_6-hive2-lib</module>
         <module>hdp_2_6-flume-lib</module>
+        -->
         <module>jython_2_7-lib</module>
+        <!--
         <module>mapr_6_0-lib</module>
         <module>mapr_6_0-mep4-lib</module>
         <module>mapr_spark_2_1_mep_3_0-lib</module>
         <module>mongodb_3-lib</module>
+        -->
       </modules>
     </profile>
 

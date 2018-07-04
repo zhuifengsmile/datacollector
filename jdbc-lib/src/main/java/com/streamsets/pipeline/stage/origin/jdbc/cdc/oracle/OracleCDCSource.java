@@ -357,7 +357,8 @@ public class OracleCDCSource extends BaseSource {
           if (!useLocalBuffering) {
             throw new StageException(JDBC_82);
           }
-          startTimestamp = offset.timestamp.minusSeconds(configBean.txnWindow);
+//          startTimestamp = offset.timestamp.minusSeconds(configBean.txnWindow);
+          startTimestamp = offset.timestamp;
         } else {
           if (useLocalBuffering) {
             throw new StageException(JDBC_83);
@@ -464,7 +465,7 @@ public class OracleCDCSource extends BaseSource {
         selectChanges.setQueryTimeout(configBean.queryTimeout);
         selectChanges.setFetchSize(configBean.jdbcFetchSize);
         resultSet = selectChanges.executeQuery();
-        while (resultSet.next() && !getContext().isStopped()) {
+        while (!getContext().isStopped() && resultSet.next()) {
           query.append(resultSet.getString(5));
           // CSF is 1 if the query is incomplete, so read the next row before parsing
           // CSF being 0 means query is complete, generate the record
@@ -656,7 +657,9 @@ public class OracleCDCSource extends BaseSource {
         try {
           if (error) {
             try {
-              resetDBConnectionsIfRequired();
+              if(!getContext().isStopped()){
+                resetDBConnectionsIfRequired();
+              }
             } catch (SQLException sqlEx) {
               LOG.error("Error while connecting to DB", sqlEx);
               addToStageExceptionsQueue(new StageException(JDBC_00, sqlEx));
@@ -665,10 +668,12 @@ public class OracleCDCSource extends BaseSource {
             }
           } else {
             discardOldUncommitted(startTime);
-            startTime = adjustStartTime(endTime);
+            startTime = adjustStartTime(endTime).plusSeconds(1);
             endTime = getEndTimeForStartTime(startTime);
           }
-          startLogMinerUsingGivenDates(startTime.format(DT_FORMATTER), endTime.format(DT_FORMATTER));
+          if(!getContext().isStopped()){
+            startLogMinerUsingGivenDates(startTime.format(DT_FORMATTER), endTime.format(DT_FORMATTER));
+          }
         } catch (SQLException ex) {
           LOG.error("Error while attempting to start LogMiner", ex);
           try {
@@ -944,9 +949,13 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private LocalDateTime getEndTimeForStartTime(LocalDateTime startTime) {
+    if(configBean.choseEndTime){
+      return startTime.plusSeconds(configBean.logminerWindow);
+    }
     LocalDateTime sessionMax = startTime.plusSeconds(configBean.logminerWindow);
     LocalDateTime now = nowAtDBTz();
-    return (sessionMax.isAfter(now) ? now : sessionMax);
+    LocalDateTime endTime = (sessionMax.isAfter(now) ? now : sessionMax);
+    return (endTime.isAfter(startTime) ? endTime : startTime);
   }
 
   private void startLogMinerUsingGivenSCNs(BigDecimal oldestSCN, BigDecimal endSCN) throws SQLException {

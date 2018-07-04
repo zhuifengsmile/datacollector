@@ -147,7 +147,9 @@ public class KafkaValidationUtil09IT {
       topic1,
       new HashMap<String, Object>(),
       configIssues,
-      true
+      true,
+      null,
+      null
     );
 
     Assert.assertEquals(true, valid);
@@ -164,7 +166,7 @@ public class KafkaValidationUtil09IT {
       topicX,
       kafkaClientConfig,
       configIssues,
-      true
+      true,null,null
     );
 
     Assert.assertEquals(false, valid);
